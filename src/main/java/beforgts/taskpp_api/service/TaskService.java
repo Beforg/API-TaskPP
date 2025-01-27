@@ -1,6 +1,8 @@
 package beforgts.taskpp_api.service;
 
+import beforgts.taskpp_api.domain.list.TaskList;
 import beforgts.taskpp_api.domain.task.*;
+import beforgts.taskpp_api.repository.TaskListRepository;
 import beforgts.taskpp_api.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,9 @@ public class TaskService {
 
     @Autowired
     private TaskRepository repository;
+    @Autowired
+    private TaskListRepository taskListRepository;
+
 
     public void create(CreateTaskDTO dto) {
         try {
@@ -33,6 +38,10 @@ public class TaskService {
             throw new RuntimeException("Task not found.");
         }
         Task updatedTask = task.get();
+        if (!dto.idList().isEmpty()) {
+            TaskList taskList = this.taskListRepository.findById(UUID.fromString(dto.idList())).orElseThrow();
+            updatedTask.setTaskList(taskList);
+        }
         updatedTask.updateTask(dto);
         updatedTask.setCompleted(!updatedTask.isCompleted());
         repository.save(updatedTask);

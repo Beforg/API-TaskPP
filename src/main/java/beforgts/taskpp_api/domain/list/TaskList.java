@@ -2,16 +2,12 @@ package beforgts.taskpp_api.domain.list;
 
 import beforgts.taskpp_api.domain.task.Task;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "lists")
-@AllArgsConstructor
-@NoArgsConstructor
 public class TaskList {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,6 +16,20 @@ public class TaskList {
     private String category;
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
+    private boolean deactivated;
+
+    public TaskList() {
+
+    }
+
+    public TaskList(CreateTaskListDTO dto) {
+        this.name = dto.name();
+        this.category = dto.category();
+    }
+
+    public int getTaskListSize () {
+        return tasks.size();
+    }
 
     public UUID getId() {
         return id;
@@ -51,5 +61,18 @@ public class TaskList {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public boolean isDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        this.deactivated = deactivated;
+    }
+
+    public void update(CreateTaskListDTO dto) {
+        this.name = dto.name();
+        this.category = dto.category();
     }
 }
