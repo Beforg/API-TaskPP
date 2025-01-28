@@ -25,7 +25,11 @@ public class TaskService {
     public void create(CreateTaskDTO dto) {
         try {
             Task task = new Task(dto);
-            repository.save(task);
+            if (dto.listId() != null) {
+                TaskList taskList = this.taskListRepository.findById(UUID.fromString(dto.listId())).orElseThrow();
+                task.setTaskList(taskList);
+            }
+            repository.save(task);;
         } catch (Exception e) {
             throw new RuntimeException("Error creating task: " + e.getMessage());
         }
@@ -38,7 +42,7 @@ public class TaskService {
             throw new RuntimeException("Task not found.");
         }
         Task updatedTask = task.get();
-        if (!dto.idList().isEmpty()) {
+        if (dto.idList() != null && !dto.idList().isEmpty()) {
             TaskList taskList = this.taskListRepository.findById(UUID.fromString(dto.idList())).orElseThrow();
             updatedTask.setTaskList(taskList);
         }
@@ -79,17 +83,25 @@ public class TaskService {
     public Page<TaskDTO> list(String date, int page, int size) {
         return repository.findByDate(date, PageRequest.of(page, size)).map(TaskDTO::new);
     }
-    public Page<TaskDTO> listLate(String date, int page, int size) {
-        return repository.findByDateBefore(date, PageRequest.of(page, size)).map(TaskDTO::new);
+    public Page<TaskDTO> listLate(int page, int size) {
+        return repository.findByDateBefore(LocalDate.now().toString(), PageRequest.of(page, size)).map(TaskDTO::new);
+    }
+
+    public Page<TaskDTO> next(int page, int size) {
+        return repository.findByDateAfter(LocalDate.now().toString(), PageRequest.of(page, size)).map(TaskDTO::new);
     }
 
     public TaskCountDTO countTask() {
         int today = repository.countByDate(LocalDate.now().toString());
         int late = repository.countByDateBefore(LocalDate.now().toString());
         int tomorrow = repository.countByDate(LocalDate.now().plusDays(1).toString());
-        int next = repository.countByDateAfter(LocalDate.now().plusDays(1).toString());
+        int next = repository.countByDateAfter(LocalDate.now().toString());
         int deactivated = repository.countByDeactivated(true);
         return new TaskCountDTO(today, tomorrow,next, late, deactivated);
 
+    }
+
+    public Page<TaskDTO> listDeactivated(int page, int size) {
+        return repository.findByDeactivated(PageRequest.of(page, size)).map(TaskDTO::new);
     }
 }

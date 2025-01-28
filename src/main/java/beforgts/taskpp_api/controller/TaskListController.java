@@ -22,7 +22,7 @@ public class TaskListController {
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO> create(@RequestBody CreateTaskListDTO dto) {
         this.service.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("List created successfully.", HttpStatus.CREATED));
+        return ResponseEntity.ok(new ResponseDTO("List created successfully.", HttpStatus.CREATED));
     }
     @GetMapping("/get/all")
     public ResponseEntity<List<TaskListDTO>> getAll() {

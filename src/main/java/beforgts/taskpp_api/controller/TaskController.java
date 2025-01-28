@@ -22,7 +22,7 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO> create(@RequestBody CreateTaskDTO dto){
         this.service.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("Task created successfully.", HttpStatus.CREATED));
+        return ResponseEntity.ok(new ResponseDTO("Task created successfully.", HttpStatus.CREATED));
     }
 
     @PutMapping("/update/{id}")
@@ -43,7 +43,7 @@ public class TaskController {
         return ResponseEntity.ok(new ResponseDTO("Task status updated successfully.", HttpStatus.OK));
     }
 
-    @DeleteMapping("/delete/{id}/permanent")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseDTO> delete(@PathVariable String id){
         this.service.delete(id);
         return ResponseEntity.ok(new ResponseDTO("Task deleted successfully.", HttpStatus.OK));
@@ -53,17 +53,39 @@ public class TaskController {
     public ResponseEntity<Page<TaskDTO>> listByDate(
                                                     @PathVariable String date,
                                                     @RequestParam(defaultValue = "1") int page,
-                                                    @RequestParam(defaultValue = "5") int size){
+                                                    @RequestParam(defaultValue = "10") int size){
         return ResponseEntity.ok(this.service.list(date, page, size));
     }
 
-    @GetMapping("/get/{listId}")
+    @GetMapping("/get/list/{listId}")
     public ResponseEntity<Page<TaskDTO>> listByList(
                                                                      @PathVariable String listId,
                                                                      @RequestParam(defaultValue = "1") int page,
                                                                      @RequestParam(defaultValue = "5") int size){
         return ResponseEntity.ok(this.service.list(listId, page, size));
     }
+
+    @GetMapping("/get/deactivated")
+    public ResponseEntity<Page<TaskDTO>> listDeactivated(
+                                                    @RequestParam(defaultValue = "1") int page,
+                                                    @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(this.service.listDeactivated(page, size));
+    }
+
+    @GetMapping("/get/late")
+    public ResponseEntity<Page<TaskDTO>> listLate(
+                                                    @RequestParam(defaultValue = "1") int page,
+                                                    @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(this.service.listLate(page, size));
+    }
+
+    @GetMapping("/get/next")
+    public ResponseEntity<Page<TaskDTO>> listNext(
+                                                    @RequestParam(defaultValue = "1") int page,
+                                                    @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(this.service.next(page, size));
+    }
+
     @GetMapping("/get/count")
     public ResponseEntity<TaskCountDTO> count(){
         return ResponseEntity.ok(this.service.countTask());
