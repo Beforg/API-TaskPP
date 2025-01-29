@@ -25,7 +25,7 @@ public class TaskService {
     public void create(CreateTaskDTO dto) {
         try {
             Task task = new Task(dto);
-            if (dto.listId() != null) {
+            if (dto.listId() != null && !dto.listId().isEmpty()) {
                 TaskList taskList = this.taskListRepository.findById(UUID.fromString(dto.listId())).orElseThrow();
                 task.setTaskList(taskList);
             }
@@ -43,11 +43,12 @@ public class TaskService {
         }
         Task updatedTask = task.get();
         if (dto.idList() != null && !dto.idList().isEmpty()) {
+            System.out.println(dto.idList());
             TaskList taskList = this.taskListRepository.findById(UUID.fromString(dto.idList())).orElseThrow();
             updatedTask.setTaskList(taskList);
         }
         updatedTask.updateTask(dto);
-        updatedTask.setCompleted(!updatedTask.isCompleted());
+        System.out.println("Atualiando task: " + updatedTask.getTitle());
         repository.save(updatedTask);
 
     }
@@ -103,5 +104,9 @@ public class TaskService {
 
     public Page<TaskDTO> listDeactivated(int page, int size) {
         return repository.findByDeactivated(PageRequest.of(page, size)).map(TaskDTO::new);
+    }
+
+    public Page<TaskDTO> byList(String listId, int page, int size) {
+        return repository.findByTaskListId(UUID.fromString(listId), PageRequest.of(page, size)).map(TaskDTO::new);
     }
 }

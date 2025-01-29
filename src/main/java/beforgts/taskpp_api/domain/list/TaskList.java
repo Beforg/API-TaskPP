@@ -28,7 +28,7 @@ public class TaskList {
     }
 
     public int getTaskListSize () {
-        return tasks.size();
+        return (int) tasks.stream().filter(task -> !task.isDeactivated()).count();
     }
 
     public UUID getId() {

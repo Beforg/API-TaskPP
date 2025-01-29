@@ -53,7 +53,7 @@ public class TaskController {
     public ResponseEntity<Page<TaskDTO>> listByDate(
                                                     @PathVariable String date,
                                                     @RequestParam(defaultValue = "1") int page,
-                                                    @RequestParam(defaultValue = "10") int size){
+                                                    @RequestParam(defaultValue = "11") int size){
         return ResponseEntity.ok(this.service.list(date, page, size));
     }
 
@@ -61,28 +61,28 @@ public class TaskController {
     public ResponseEntity<Page<TaskDTO>> listByList(
                                                                      @PathVariable String listId,
                                                                      @RequestParam(defaultValue = "1") int page,
-                                                                     @RequestParam(defaultValue = "5") int size){
-        return ResponseEntity.ok(this.service.list(listId, page, size));
+                                                                     @RequestParam(defaultValue = "11") int size){
+        return ResponseEntity.ok(this.service.byList(listId, page, size));
     }
 
     @GetMapping("/get/deactivated")
     public ResponseEntity<Page<TaskDTO>> listDeactivated(
                                                     @RequestParam(defaultValue = "1") int page,
-                                                    @RequestParam(defaultValue = "10") int size){
+                                                    @RequestParam(defaultValue = "11") int size){
         return ResponseEntity.ok(this.service.listDeactivated(page, size));
     }
 
     @GetMapping("/get/late")
     public ResponseEntity<Page<TaskDTO>> listLate(
                                                     @RequestParam(defaultValue = "1") int page,
-                                                    @RequestParam(defaultValue = "10") int size){
+                                                    @RequestParam(defaultValue = "11") int size){
         return ResponseEntity.ok(this.service.listLate(page, size));
     }
 
     @GetMapping("/get/next")
     public ResponseEntity<Page<TaskDTO>> listNext(
                                                     @RequestParam(defaultValue = "1") int page,
-                                                    @RequestParam(defaultValue = "10") int size){
+                                                    @RequestParam(defaultValue = "11") int size){
         return ResponseEntity.ok(this.service.next(page, size));
     }
 

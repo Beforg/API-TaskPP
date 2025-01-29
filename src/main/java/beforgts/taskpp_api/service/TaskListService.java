@@ -3,7 +3,9 @@ package beforgts.taskpp_api.service;
 import beforgts.taskpp_api.domain.list.CreateTaskListDTO;
 import beforgts.taskpp_api.domain.list.TaskList;
 import beforgts.taskpp_api.domain.list.TaskListDTO;
+import beforgts.taskpp_api.domain.task.Task;
 import beforgts.taskpp_api.repository.TaskListRepository;
+import beforgts.taskpp_api.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,8 @@ public class TaskListService {
 
     @Autowired
     private TaskListRepository repository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     public void create(CreateTaskListDTO dto) {
         TaskList taskList = new TaskList(dto);
@@ -41,14 +45,12 @@ public class TaskListService {
         this.repository.save(taskList);
     }
 
-    public void deactivate(String id) {
-        this.repository.findById(UUID.fromString(id)).ifPresent(taskList -> {
-            taskList.setDeactivated(!taskList.isDeactivated());
-            this.repository.save(taskList);
-        });
-    }
-
     public void delete(String id) {
+        List<Task> tasks = this.taskRepository.findAllByTaskListId(UUID.fromString(id));
+        for (Task task : tasks) {
+            task.setTaskList(null);
+            this.taskRepository.save(task);
+        }
         this.repository.deleteById(UUID.fromString(id));
     }
 }

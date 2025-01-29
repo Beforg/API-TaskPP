@@ -41,13 +41,7 @@ public class TaskListController {
         return ResponseEntity.ok(new ResponseDTO("List updated successfully.", HttpStatus.OK));
     }
 
-    @PutMapping("/deactivate/{id}")
-    public ResponseEntity<ResponseDTO> deactivate(@PathVariable String id){
-        this.service.deactivate(id);
-        return ResponseEntity.ok(new ResponseDTO("List trashed successfully.", HttpStatus.OK));
-    }
-
-    @DeleteMapping("/delete/{id}/permanent")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseDTO> delete(@PathVariable String id){
         this.service.delete(id);
         return ResponseEntity.ok(new ResponseDTO("List deleted successfully.", HttpStatus.OK));
