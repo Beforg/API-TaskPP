@@ -1,7 +1,7 @@
 # API Task++
 
 <p align="center">
-  <img src="https://github.com/Beforg/assets/blob/main/taskpp/logo.png" alt="Logo" width="100" height="100">
+  <img src="https://github.com/Beforg/assets/blob/main/taskpp/logo.png" alt="Logo">
 </p>
 
 <h1 align="center">API Task++</h1>
